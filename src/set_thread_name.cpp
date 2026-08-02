@@ -1,17 +1,7 @@
-/////////////////////////////////////////////////////////////////////////////
-//
-// Copyright (c) Milivoj (Mike) DAVIDOV
-// All rights reserved.
-//
-// THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
-// EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-// WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
-//
-/////////////////////////////////////////////////////////////////////////////
-
 #ifdef _WIN32
-    #include "set_thread_name_win.hpp"
+    #include "set_thread_name_win.h"
 #elif defined(__linux__)
+    #define _GNU_SOURCE
     #include <pthread.h>
 #elif defined(__APPLE__)
     #include <pthread.h>

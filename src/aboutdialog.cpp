@@ -1,15 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////
-//
-// Copyright (c) Milivoj (Mike) DAVIDOV
-// All rights reserved.
-//
-// THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
-// EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-// WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
-//
-/////////////////////////////////////////////////////////////////////////////
-
-#include "aboutdialog.hpp"
+#include "aboutdialog.h"
 #include <QVBoxLayout>
 #include <QTextBrowser>
 #include <QPushButton>
@@ -22,7 +11,7 @@ AboutDialog::AboutDialog(QWidget* parent /*= nullptr*/) : QDialog(parent) {
 
     QVBoxLayout* layout = new QVBoxLayout(this);
 
-    QTextBrowser* htmlBrowser = new QTextBrowser(this);
+    QTextBrowser* htmlBrowser = new QTextBrowser;
     htmlBrowser->setOpenExternalLinks(true);
     htmlBrowser->setHtml(R"(
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -37,8 +26,9 @@ AboutDialog::AboutDialog(QWidget* parent /*= nullptr*/) : QDialog(parent) {
         <div id="content"  align="center">
         <!--<p><img src="images/foldersearch.png"</img></p>-->
         <br/>
+        <h2><a href="http://devonline.au">devonline.au</a></h2>
         <br/>
-        <p align="center"><strong>Copyright &copy; 2025 Milivoj (Mike) Davidov. All rights reserved. </strong></p>
+        <p align="center"><strong>Copyright &copy; 2012-2025 Milivoj (Mike) Davidov. All rights reserved. </strong></p>
         <br/>
         <p align="left">
         This software application was developed with best intentions; the author believes it functions correctly.
@@ -57,6 +47,7 @@ AboutDialog::AboutDialog(QWidget* parent /*= nullptr*/) : QDialog(parent) {
         USE OR OTHER DEALINGS IN THE SOFTWARE.
         <br/>
         <br/>
+        WARNING: This computer program is protected by copyright law and international treaties.
         </p>
         <!--
         <p align="center">Favourite quote or slogan.</p>
@@ -71,7 +62,7 @@ AboutDialog::AboutDialog(QWidget* parent /*= nullptr*/) : QDialog(parent) {
         </html>
     )");
 
-    QPushButton* closeButton = new QPushButton("Close", this);
+    QPushButton* closeButton = new QPushButton("Close");
 
     layout->addWidget(htmlBrowser);
     layout->addWidget(closeButton);

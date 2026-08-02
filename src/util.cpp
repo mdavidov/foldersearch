@@ -1,75 +1,88 @@
-/////////////////////////////////////////////////////////////////////////////
-//
-// Copyright (c) Milivoj (Mike) DAVIDOV
-// All rights reserved.
-//
-// THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
-// EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-// WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
-//
-/////////////////////////////////////////////////////////////////////////////
+/****************************************************************************
+**
+** Copyright (c) 2010 Milivoj (Mike) Davidov
+** All rights reserved.
+**
+** THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+** EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+** WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
+**
+****************************************************************************/
 
-#include "config.hpp"
-#include "util.hpp"
+#include "precompiled.h"
+#include "config.h"
+#include "util.h"
 
 #include <QObject>
 #include <QtGui>
 #include <QtWidgets>
-#include <QDebug>
 
-namespace mmd
+namespace Devonline
 {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
-    QString sizeToHumanReadable(quint64 size)
+    bool sizeToHumanReadable(quint64 size, QString& humanReadable)
     {
-        if (size == 0) {
-            return QString("0 Bytes");
-        }
-        static const quint64 KILO = 1024;
-        static const quint64 MEGA = 1024 * KILO;
-        static const quint64 GIGA = 1024 * MEGA;
-        static const quint64 TERA = 1024 * GIGA;
-        static const quint64 PETA = 1024 * TERA;
-        double sz = (double) size;
-        QString unit = "Bytes";
+        try
+        {
+            if (size == 0) {
+                humanReadable = QString("0 Bytes");
+                return true;
+            }
 
-        if      (size >= PETA) {
-            sz /= (double) PETA;
-            unit = "PB";
-        }
-        else if (size >= TERA) {
-            sz /= (double) TERA;
-            unit = "TB";
-        }
-        else if (size >= GIGA) {
-            sz /= (double) GIGA;
-            unit = "GB";
-        }
-        else if (size >= MEGA) {
-            sz /= (double) MEGA;
-            unit = "MB";
-        }
-        else if (size >= KILO) {
-            sz /= (double) KILO;
-            unit = "KB";
-        }
+            static const quint64 KILO = 1024;
+            static const quint64 MEGA = 1024 * KILO;
+            static const quint64 GIGA = 1024 * MEGA;
+            static const quint64 TERA = 1024 * GIGA;
+            static const quint64 PETA = 1024 * TERA;
 
-        int precision = 3;
-        if (unit.startsWith("B")) {
-            precision = 0;
+            double sz = (double) size;
+            QString unit = "Bytes";
+
+            if      (size >= PETA) {
+                sz /= (double) PETA;
+                unit = "PB";
+            }
+            else if (size >= TERA) {
+                sz /= (double) TERA;
+                unit = "TB";
+            }
+            else if (size >= GIGA) {
+                sz /= (double) GIGA;
+                unit = "GB";
+            }
+            else if (size >= MEGA) {
+                sz /= (double) MEGA;
+                unit = "MB";
+            }
+            else if (size >= KILO) {
+                sz /= (double) KILO;
+                unit = "KB";
+            }
+
+            int precision = 3;
+            if (unit.startsWith("B")) {
+                precision = 0;
+            }
+            else if (sz >= 100) {
+                precision = 1;
+            }
+            else if (sz >= 10) {
+                precision = 2;
+            }
+            else {
+                precision = 3;
+            }
+
+            humanReadable = QString("%1 %2").arg(sz, 1, 'f', precision).arg(unit);
+            return true;
         }
-        else if (sz >= 100) {
-            precision = 1;
+        catch (...)
+        {
+            indicateErrorDbg("Exception");
+            return false;
         }
-        else if (sz >= 10) {
-            precision = 2;
-        }
-        else {
-            precision = 3;
-        }
-        return QString("%1 %2").arg(sz, 1, 'f', precision).arg(unit);
     }
 
     QString elapsedTimeToStr( qint64 elapsedMilSec)
@@ -102,11 +115,18 @@ namespace mmd
 
     void indicateErrorDbg(const QString& text)
     {
-        #if !defined(NDEBUG)
-        #if !defined(Q_OS_MAC)
-            QMessageBox::warning( 0, text, text);
+        (void) text;
+        #ifndef NDEBUG
+            try {
+                #if !defined(Q_OS_MAC)
+                    QMessageBox::warning( 0, text, text);
+                #endif
+            }
+            catch (...) {
+            }
+        #else
+            (void) text;
         #endif
-        #endif
-        (void)text; // to avoid unused parameter warning in release builds
     }
+
 }
